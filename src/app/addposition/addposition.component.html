@@ -1,0 +1,26 @@
+<form #positionForm= "ngForm" novalidate (ngSubmit)="onSubmit(positionForm)">
+  <input
+      ngModel
+      #positionName="ngModel"
+      type="text"
+      name="positionName"
+      class="form-control"
+      minlength="3"
+      [class.is-invalid]="positionName.invalid && positionName.touched"
+      required
+      ><br>
+      <div *ngIf="positionName.errors && (positionName.invalid || positionName.touched)">
+          <small class="text-danger" *ngIf="positionName.errors.required && positionName.touched">Position name is required</small>
+          <small class="text-danger" *ngIf="positionName.errors.minlength && positionName.touched">Name must be at least 3 digits</small>
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="positionForm.form.invalid">Ajouter</button>
+</form>
+<div class="my-5 cards">
+  <mat-card class="example-card my-5 mx-4" *ngFor="let user of positions">
+  <mat-card-title>{{user.p_id}}</mat-card-title>
+  <mat-card-subtitle>{{user.p_name}}</mat-card-subtitle>
+  <mat-card-actions>
+    <button mat-raised-button color="primary">SHARE</button>
+  </mat-card-actions>
+</mat-card>
+</div>
