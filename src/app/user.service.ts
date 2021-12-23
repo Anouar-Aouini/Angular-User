@@ -28,6 +28,10 @@ export class UserService {
     let token=<string>localStorage.getItem("token")
     return this.http.get<User[]>(this.url+"/users/",{headers : new HttpHeaders().set('Authorization', JSON.parse(token))})
   }
+    getFilteredUsers(search:string): Observable<User[]>{
+    let token=<string>localStorage.getItem("token")
+    return this.http.get<User[]>(this.url+"/users/search/"+search,{headers : new HttpHeaders().set('Authorization', JSON.parse(token))})
+  }
   getPositions(){
      let token=<string>localStorage.getItem("token")
     return this.http.get("http://localhost:8000/api/v1/posts/", { headers: new HttpHeaders().set('Authorization', JSON.parse(token)) })
@@ -47,4 +51,5 @@ export class UserService {
     let token=<string>localStorage.getItem("token")
     return this.http.get("http://localhost:8000/api/v1/roles/", { headers: new HttpHeaders().set('Authorization', JSON.parse(token)) })
   }
+
 }

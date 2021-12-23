@@ -26,8 +26,11 @@ export class LoginComponent implements OnInit {
       localStorage.setItem("token", JSON.stringify("Bearer " + data.token));
       localStorage.setItem("email", JSON.stringify(data.email));
       this.router.navigate(['/auth/list']);
-      });
-     this.loginForm.reset();
+    }, () => {
+      this.errorMessage = { msg: "Bad credentials", show: true }
+      setTimeout(() => this.errorMessage={ msg: "", show: false }, 3000)
+    });
+    //  this.loginForm.reset();
   }
 
   get email() {

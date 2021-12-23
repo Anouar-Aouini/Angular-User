@@ -17,7 +17,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import {MatButtonModule} from '@angular/material/button';
-
+import { ListComponent } from './list/list.component';
 
 
 
@@ -32,7 +32,8 @@ import {MatButtonModule} from '@angular/material/button';
     AddpositionComponent,
     PostsListComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    ListComponent
   ],
   imports: [
     BrowserModule,

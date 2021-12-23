@@ -10,6 +10,7 @@ import { User } from './user.module';
 export class UserlistComponent implements OnInit {
   public users?: User[]
   public email: string = "";
+  public search: string = "";
   constructor(public userService:UserService) { }
 
   ngOnInit(): void {

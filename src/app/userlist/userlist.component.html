@@ -1,11 +1,4 @@
 <div class="my-5 cards">
-  <h1 *ngIf="!users?.length">There is no users yet!</h1>
-  <mat-card  class="example-card my-4 mx-4" *ngFor="let user of users" >
-  <mat-card-title>{{user.firstName}}</mat-card-title>
-  <mat-card-subtitle>{{user.email}}</mat-card-subtitle>
-  <mat-card-actions>
-    <button mat-raised-button color="warn" *ngIf="!(email==user.email)" (click)="deleteUser(user.id)">Delete</button>
-    <button mat-raised-button color="primary">SHARE</button>
-  </mat-card-actions>
-</mat-card>
+  <input type="text" class="form-control" [(ngModel)]="search">
+  <app-list [search]="search"></app-list>
 </div>
