@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
     let user = {email: this.loginForm.value.email,password: this.loginForm.value.password};
     this.userService.login(user).subscribe(data => {
       localStorage.setItem("token", JSON.stringify("Bearer " + data.token));
-      localStorage.setItem("email", JSON.stringify(data.email));
       this.router.navigate(['/auth/list']);
     }, () => {
       this.errorMessage = { msg: "Bad credentials", show: true }

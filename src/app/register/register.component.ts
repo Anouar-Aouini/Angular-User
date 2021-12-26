@@ -45,6 +45,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmitRegister() {
+    console.log(this.role)
     let user =  {
   email: this.registerForm.value.email,
   firstName: this.registerForm.value.firstName,

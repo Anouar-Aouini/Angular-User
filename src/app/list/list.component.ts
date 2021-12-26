@@ -14,8 +14,8 @@ export class ListComponent implements OnInit ,OnChanges{
   constructor(public userService:UserService) { }
 
   ngOnInit(): void {
-    this.email = JSON.parse(<string>localStorage.getItem("email"));
     this.userService.getUsers().subscribe(data => this.users = data);
+    this.userService.current().subscribe(data=>this.email = data.message)
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.search.currentValue.length > 0) {
@@ -28,6 +28,6 @@ export class ListComponent implements OnInit ,OnChanges{
 
   deleteUser(id: number) {
     this.userService.deleteUser(id);
-    this.userService.getUsers().subscribe(data => this.users=data)
+    this.userService.getUsers().subscribe(data => this.users = data)
   }
 }

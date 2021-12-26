@@ -14,12 +14,15 @@ export class UserlistComponent implements OnInit {
   constructor(public userService:UserService) { }
 
   ngOnInit(): void {
-    this.email = JSON.parse(<string>localStorage.getItem("email"));
-    this.userService.getUsers().subscribe(data => this.users = data);
+    this.userService.getUsers().subscribe(data => {
+      this.users = data;
+    });
   }
 
   deleteUser(id: number) {
     this.userService.deleteUser(id);
-    this.userService.getUsers().subscribe(data => this.users=data)
+    this.userService.getUsers().subscribe(data => {
+      this.users = data;
+    })
   }
 }

@@ -1,8 +1,0 @@
-.example-card {
-  width: 228px;
-}
-.cards{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}

@@ -43,9 +43,8 @@ img {
 background: linear-gradient(to right, #FFFFFF, #ECE9E6);
 
 }
-.card:hover{
-  cursor: pointer;
-}
+
+
 
 .card__body {
   padding: 1rem;

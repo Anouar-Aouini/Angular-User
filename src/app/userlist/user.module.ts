@@ -6,6 +6,7 @@ export class User{
     public email: string,
     public password: string,
     public account: { id: number, password: string },
-    public position: { p_id:number, p_name:string }
+    public position: { p_id: number, p_name: string },
+    public roles:any
   ){}
 }
