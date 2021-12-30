@@ -24,12 +24,12 @@ export class LoginComponent implements OnInit {
     let user = {email: this.loginForm.value.email,password: this.loginForm.value.password};
     this.userService.login(user).subscribe(data => {
       localStorage.setItem("token", JSON.stringify("Bearer " + data.token));
-      this.router.navigate(['/auth/list']);
+      this.router.navigate(['/auth/dashboard']);
     }, () => {
       this.errorMessage = { msg: "Bad credentials", show: true }
       setTimeout(() => this.errorMessage={ msg: "", show: false }, 3000)
     });
-    //  this.loginForm.reset();
+      this.loginForm.reset();
   }
 
   get email() {

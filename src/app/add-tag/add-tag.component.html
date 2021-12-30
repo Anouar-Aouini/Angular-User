@@ -1,4 +1,7 @@
 <div class="container">
+<div class="alert alert-success" role="alert" *ngIf="successMessage.showSuccess">
+  {{successMessage.msg}}
+</div>
 <h1 style="text-align: center;">Add Tag</h1>
 <mat-card>
   <form (submit)="addTag(tagForm)" #tagForm="ngForm">

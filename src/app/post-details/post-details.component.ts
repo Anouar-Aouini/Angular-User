@@ -6,6 +6,7 @@ import { Post } from './../posts-list/post.module';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { User } from '../userlist/user.module';
+import { ModalDismissReasons,NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-post-details',
@@ -13,17 +14,23 @@ import { User } from '../userlist/user.module';
   styleUrls: ['./post-details.component.css']
 })
 export class PostDetailsComponent implements OnInit {
+  public successMessage = { msg: "", showSuccess: false };
+  public updatedPost: { title: string, description: string } = { title: "", description: "" };
+  public closeResult = '';
   public commentForm!: FormGroup;
-  public param?: { id: number };
+  public param: { id: number }={ id: 0 };
   public post?: Post;
-  public id: string="";
+  public id: string = "";
+  public imgURL: string = "https://i.pravatar.cc/40?img=";
   public comments: any;
-  public users?:User[];
-  constructor(private fb: FormBuilder,
-    public route: ActivatedRoute,
-    public postService: PostService,
-    public commentService: CommentService,
-    public userService : UserService) { }
+  public users?: User[];
+  public activeUser?: User;
+  constructor(private modalService: NgbModal,
+  private fb: FormBuilder,
+  public route: ActivatedRoute,
+  public postService: PostService,
+  public commentService: CommentService,
+  public userService : UserService) { }
 
   ngOnInit(): void {
         this.commentForm = this.fb.group({
@@ -34,16 +41,25 @@ export class PostDetailsComponent implements OnInit {
           }
     this.postService.getPosts().subscribe(data => {
       this.post = data.filter(el => el.id == this.param?.id)[0];
+      this.updatedPost = { title: this.post.title, description: this.post.description };
     })
-    this.userService.activeUser().subscribe(data=> this.id = data.id+"" )
+    this.userService.activeUser().subscribe(data => this.id = data.id + "");
     this.commentService.getComments(this.param.id).subscribe(data => {
       this.comments = data.content;
       this.userService.getUsers().subscribe(data => {
         this.users = data;
-        console.log(this.id,this.users)
+        this.activeUser = data.filter(el => el.id === +this.id)[0];
       });
     })
-
+  }
+  onSubmitUpdate() {
+    this.postService.updatePost(this.param.id, this.updatedPost).subscribe(
+      data => {
+      this.post = data.post;
+      this.successMessage = { msg :"Post updated successfully!", showSuccess: true }
+      setTimeout(() => this.successMessage={ msg:"", showSuccess: false }, 3000)
+      }
+    )
   }
   userName(comment:any) {
     let firstName = this.users?.filter(el => el.id == + comment.user_id)[0].firstName;
@@ -52,7 +68,9 @@ export class PostDetailsComponent implements OnInit {
   onSubmitComment() {
     if (this.commentForm.value.text.length > 0) {
       let comment = {text:this.commentForm.value.text,user_id:this.id}
-         this.commentService.addComments(this.param!.id, comment)
+      this.commentService.addComments(this.param!.id, comment).subscribe(data=>{
+           this.comments = data.content
+         })
         this.commentService.getComments(this.param!.id).subscribe(data => {
           this.comments = data.content;
         })
@@ -92,6 +110,23 @@ export class PostDetailsComponent implements OnInit {
      timestamp = "just now"
   }
     return timestamp;
-}
+    }
+    open(content:any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
 
 }

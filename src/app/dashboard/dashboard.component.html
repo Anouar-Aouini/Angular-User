@@ -1,36 +1,43 @@
+<div class="alert alert-success" role="alert" *ngIf="successMessage.showSuccess">
+  {{successMessage.msg}}
+</div>
 <div class="row py-5 px-4">
     <div class="col-md-5 mx-auto">
         <!-- Profile widget -->
         <div class="bg-white shadow rounded overflow-hidden">
             <div class="px-4 pt-0 pb-4 cover">
                 <div class="media align-items-end profile-head">
-                    <div class="profile mr-3"><img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80" alt="..." width="130" class="rounded mb-2 img-thumbnail">
-                      <a class="btn btn-outline-dark btn-sm btn-block" (click)="open(content)">Edit profile</a></div>
+                    <div class="profile mr-3"><img [src]="imgURL+(idUser! + 5)" alt="..." width="130" class="rounded mb-2 img-thumbnail">
+                      <a class="btn btn-outline-dark btn-sm btn-block" (click)="open(content)">Edit profile</a>
+                    </div>
                     <div class="media-body mb-5 text-white">
                         <h4 class="mt-0 mb-0">{{user?.firstName}} {{user?.lastName}}</h4>
-                        <p class="small mb-4"> <i class="fas fa-map-marker-alt mr-2"></i>New York</p>
+                        <p class="small mb-4"> <i class="fas fa-map-marker-alt mr-2"></i>{{user?.email}}</p>
                     </div>
                 </div>
             </div>
             <div class="bg-light p-4 d-flex justify-content-end text-center">
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">215</h5><small class="text-muted"> <i class="fas fa-image mr-1"></i>Photos</small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{myTags}}</h5><small class="text-muted"> <i class="fas fa-image mr-1"></i>Tags</small>
                     </li>
                     <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">745</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
-                    </li>
-                    <li class="list-inline-item">
-                        <h5 class="font-weight-bold mb-0 d-block">340</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
+                        <h5 class="font-weight-bold mb-0 d-block">{{myPosts}}</h5><small class="text-muted"> <i class="fas fa-user mr-1"></i>posts</small>
                     </li>
                 </ul>
             </div>
-            <div class="px-4 py-3">
+            <a *ngIf="!userDetails" class="btn btn-outline-dark btn-sm btn-block mx-4 col-4" (click)="open(content2)">Comlplete profile</a>
+            <a *ngIf="userDetails" class="btn btn-outline-dark btn-sm btn-block mx-4 col-4" (click)="open(content3)">Update profile</a>
+            <div class="px-4 py-3" *ngIf="userDetails">
                 <h5 class="mb-0">About</h5>
                 <div class="p-4 rounded shadow-sm bg-light">
-                    <p class="font-italic mb-0">Web Developer</p>
-                    <p class="font-italic mb-0">Lives in New York</p>
-                    <p class="font-italic mb-0">Photographer</p>
+                    <h4 class="font-italic mb-0">Age : <span>{{userDetails.age}}</span></h4>
+                    <h4 class="font-italic mb-0">Phone number : <span>{{userDetails.phoneNumber}}</span></h4>
+                    <h4 class="font-italic mb-0">Gender : <span>{{userDetails.gender}}</span></h4>
+                    <h4 class="font-italic mb-0">Date of birth : <span>{{userDetails.dateOfBirth}}</span></h4>
+                    <h4 class="font-italic mb-0">Address : <span>{{userDetails.address}}</span></h4>
+                    <h4 class="font-italic mb-0">Github profile link : <span>{{userDetails.githubProfileLink}}</span></h4>
+                    <h4 class="font-italic mb-0">Linkedin profile link : <span>{{userDetails.linkedinProfileLink}}</span></h4>
                 </div>
             </div>
         </div>
@@ -56,14 +63,14 @@
                           type="text"
                           class="form-control"
                           name="firstName"
-                          minlength="6"
+                          minlength="3"
                           required>
                           <small class="text-danger"
                           [class.d-none]="!firstName.errors?.required || firstName.untouched"
                           >First name is required</small>
                           <small class="text-danger"
                           [class.d-none]="!firstName.errors?.minlength || firstName.untouched"
-                          >First name must be at least 6 charachters long</small>
+                          >First name must be at least 3 charachters long</small>
                           </div>
                           <div class="form-group">
                           <label class="form-control-label text-muted">Last name :</label>
@@ -102,11 +109,234 @@
                           >Password must be at least 6 charachters long</small>
                           </div>
                           <div class="row justify-content-center my-3 px-3">
-                          <button class="btn btn-success" (click)="modal.close('Save click')" type="submit" [disabled]="profileUpdateForm.invalid" >Sign up</button>
+                          <button class="btn btn-success" (click)="modal.close('Save click')" type="submit" [disabled]="profileUpdateForm.invalid" >Save</button>
                           </div>
                         </form>
 </div>
 </ng-template>
-
+<ng-template #content2 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<div class="modal-body">
+                        <form #profileCompleteForm="ngForm" novalidate (ngSubmit)="onSubmitComplete()">
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Age :</label>
+                          <input
+                          [(ngModel)]="completeProfileModal.age"
+                          #age="ngModel"
+                          [class.is-invalid]="age.invalid && age.touched"
+                          type="text"
+                          class="form-control"
+                          name="age"
+                          minlength="2"
+                          required>
+                          <small class="text-danger"
+                          [class.d-none]="!age.errors?.required || age.untouched"
+                          >Age is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!age.errors?.minlength || age.untouched"
+                          >Age must be at least 2 charachters long</small>
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Phone number :</label>
+                          <input
+                          [(ngModel)]="completeProfileModal.phoneNumber"
+                          #phoneNumber="ngModel"
+                          [class.is-invalid]="phoneNumber.invalid && phoneNumber.touched"
+                          type="text"
+                          class="form-control"
+                          name="phoneNumber"
+                          minlength="8"
+                          required>
+                          <small class="text-danger"
+                          [class.d-none]="!phoneNumber.errors?.required || phoneNumber.untouched"
+                          >Phone number is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!phoneNumber.errors?.minlength || phoneNumber.untouched"
+                          >Phone number must be at least 8 charachters long</small>
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Address :</label>
+                          <input
+                          [(ngModel)]="completeProfileModal.address"
+                          #address="ngModel"
+                          [class.is-invalid]="address.invalid && address.touched"
+                          type="text"
+                          class="form-control"
+                          name="address"
+                          minlength="10"
+                          required
+                          >
+                          <small class="text-danger"
+                          [class.d-none]="!address.errors?.required || address.untouched"
+                          >Address is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!address.errors?.minlength || address.untouched"
+                          >Address must be at least 10 charachters long</small>
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Date of birth :</label>
+                          <input
+                          [(ngModel)]="completeProfileModal.dateOfBirth"
+                          #dateOfBirth="ngModel"
+                          [class.is-invalid]="dateOfBirth.invalid && dateOfBirth.touched"
+                          type="date"
+                          class="form-control"
+                          name="dateOfBirth"
+                          minlength="10"
+                          >
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Github profile link :</label>
+                          <input
+                          [(ngModel)]="completeProfileModal.githubProfileLink"
+                          #githubProfileLink="ngModel"
+                          [class.is-invalid]="githubProfileLink.invalid && githubProfileLink.touched"
+                          type="text"
+                          class="form-control"
+                          name="githubProfileLink"
+                          minlength="15"
+                          required
+                          >
+                          <small class="text-danger"
+                          [class.d-none]="!githubProfileLink.errors?.required || githubProfileLink.untouched"
+                          >Github profile link is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!githubProfileLink.errors?.minlength || githubProfileLink.untouched"
+                          >Github profile link must be at least 15 charachters long</small>
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Linkedin profile link :</label>
+                          <input
+                          [(ngModel)]="completeProfileModal.linkedinProfileLink"
+                          #linkedinProfileLink="ngModel"
+                          [class.is-invalid]="linkedinProfileLink.invalid && linkedinProfileLink.touched"
+                          type="text"
+                          class="form-control"
+                          name="linkedinProfileLink"
+                          minlength="15"
+                          required
+                          >
+                          <small class="text-danger"
+                          [class.d-none]="!linkedinProfileLink.errors?.required || linkedinProfileLink.untouched"
+                          >Linkedin profile link is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!linkedinProfileLink.errors?.minlength || linkedinProfileLink.untouched"
+                          >Linkedin profile link must be at least 15 charachters long</small>
+                          </div>
+                          <div class="mb-3">
+                          <label>Gender</label>
+                          <div class="form-check">
+                          <input [(ngModel)]="completeProfileModal.gender" type="radio"
+                           class="form-check-input" name="timePreference" value="MALE" >
+                          <label class="form-check-label">Male</label>
+                          </div>
+                          <div class="form-check">
+                          <input type="radio" class="form-check-input" name="timePreference" value="Female"
+                           [(ngModel)]="completeProfileModal.gender" >
+                          <label class="form-check-label">Female</label>
+                          </div>
+                          </div>
+                          <div class="row justify-content-center my-3 px-3">
+                          <button class="btn btn-success" (click)="modal.close('Save click')"
+                          type="submit" [disabled]="profileCompleteForm.invalid" >Save</button>
+                          </div>
+                        </form>
+</div>
+</ng-template>
+<ng-template #content3 let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<div class="modal-body">
+                        <form #profileUpdateForm="ngForm" novalidate (ngSubmit)="onSubmitUpdateDetails()">
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Age :</label>
+                          <input
+                          [(ngModel)]="updateProfileModal.age"
+                          #age="ngModel"
+                          [class.is-invalid]="age.invalid && age.touched"
+                          type="text"
+                          class="form-control"
+                          name="age"
+                          minlength="2"
+                          required>
+                          <small class="text-danger"
+                          [class.d-none]="!age.errors?.required || age.untouched"
+                          >Age is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!age.errors?.minlength || age.untouched"
+                          >Age must be at least 2 charachters long</small>
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Phone number :</label>
+                          <input
+                          [(ngModel)]="updateProfileModal.phoneNumber"
+                          #phoneNumber="ngModel"
+                          [class.is-invalid]="phoneNumber.invalid && phoneNumber.touched"
+                          type="text"
+                          class="form-control"
+                          name="phoneNumber"
+                          minlength="8"
+                          required>
+                          <small class="text-danger"
+                          [class.d-none]="!phoneNumber.errors?.required || phoneNumber.untouched"
+                          >Phone number is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!phoneNumber.errors?.minlength || phoneNumber.untouched"
+                          >Phone number must be at least 8 charachters long</small>
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Github profile link :</label>
+                          <input
+                          [(ngModel)]="updateProfileModal.githubProfileLink"
+                          #githubProfileLink="ngModel"
+                          [class.is-invalid]="githubProfileLink.invalid && githubProfileLink.touched"
+                          type="text"
+                          class="form-control"
+                          name="githubProfileLink"
+                          minlength="15"
+                          required
+                          >
+                          <small class="text-danger"
+                          [class.d-none]="!githubProfileLink.errors?.required || githubProfileLink.untouched"
+                          >Github profile link is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!githubProfileLink.errors?.minlength || githubProfileLink.untouched"
+                          >Github profile link must be at least 15 charachters long</small>
+                          </div>
+                          <div class="form-group">
+                          <label class="form-control-label text-muted">Linkedin profile link :</label>
+                          <input
+                          [(ngModel)]="updateProfileModal.linkedinProfileLink"
+                          #linkedinProfileLink="ngModel"
+                          [class.is-invalid]="linkedinProfileLink.invalid && linkedinProfileLink.touched"
+                          type="text"
+                          class="form-control"
+                          name="linkedinProfileLink"
+                          minlength="15"
+                          required
+                          >
+                          <small class="text-danger"
+                          [class.d-none]="!linkedinProfileLink.errors?.required || linkedinProfileLink.untouched"
+                          >Linkedin profile link is required</small>
+                          <small class="text-danger"
+                          [class.d-none]="!linkedinProfileLink.errors?.minlength || linkedinProfileLink.untouched"
+                          >Linkedin profile link must be at least 15 charachters long</small>
+                          </div>
+                          <div class="row justify-content-center my-3 px-3">
+                          <button class="btn btn-success" (click)="modal.close('Save click')"
+                          type="submit" [disabled]="profileUpdateForm.invalid" >Save</button>
+                          </div>
+                        </form>
+</div>
+</ng-template>
 
 <!-- <pre>{{ closeResult }}</pre> -->

@@ -8,21 +8,10 @@ import { User } from './user.module';
   styleUrls: ['./userlist.component.css']
 })
 export class UserlistComponent implements OnInit {
-  public users?: User[]
-  public email: string = "";
   public search: string = "";
-  constructor(public userService:UserService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe(data => {
-      this.users = data;
-    });
   }
 
-  deleteUser(id: number) {
-    this.userService.deleteUser(id);
-    this.userService.getUsers().subscribe(data => {
-      this.users = data;
-    })
-  }
 }

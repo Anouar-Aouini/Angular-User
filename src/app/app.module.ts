@@ -26,6 +26,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PostDetailsComponent } from './post-details/post-details.component';
 import { AuthInterceptor } from './auth.interceptor';
+import { PostlistComponent } from './postlist/postlist.component';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { AuthInterceptor } from './auth.interceptor';
     AddTagComponent,
     DashboardComponent,
     PageNotFoundComponent,
-    PostDetailsComponent
+    PostDetailsComponent,
+    PostlistComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +61,11 @@ import { AuthInterceptor } from './auth.interceptor';
     MatInputModule,
     NgbModule
   ],
-   providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi : true
+   }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

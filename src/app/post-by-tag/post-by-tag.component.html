@@ -8,7 +8,7 @@
     </div>
     <div class="card__footer">
       <div class="user">
-        <img [src]="imgURL+i" alt="user__image" class="user__image">
+        <img [src]="imgURL+(+post.user.id+5)" alt="user__image" class="user__image">
         <div class="user__info">
           <h5>{{post.user.firstName}}</h5>
           <small>{{duration(post.createdAt)}}</small>

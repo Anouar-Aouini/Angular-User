@@ -15,19 +15,21 @@ export class ListComponent implements OnInit ,OnChanges{
 
   ngOnInit(): void {
     this.userService.getUsers().subscribe(data => this.users = data);
-    this.userService.current().subscribe(data=>this.email = data.message)
+    this.userService.current().subscribe(data => this.email = data.message);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.search.currentValue.length > 0) {
-          this.userService.getFilteredUsers(changes.search.currentValue).subscribe(data => this.users=data)
-      console.log(changes.search.currentValue)
+          this.userService.getFilteredUsers(changes.search.currentValue).subscribe(data => this.users = data)
     } else {
-              this.userService.getUsers().subscribe(data => this.users = data);
+          this.userService.getUsers().subscribe(data => this.users = data);
     }
   }
 
   deleteUser(id: number) {
     this.userService.deleteUser(id);
-    this.userService.getUsers().subscribe(data => this.users = data)
+    this.userService.getUsers().subscribe(data => {
+      this.users = data;
+    })
   }
 }

@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../user.service';
 import { User } from '../userlist/user.module';
-import { FormGroup } from '@angular/forms';
+import { UserDetailsService } from './../user-details.service';
+import { UserDetails } from './userdetails.module';
+import { PostService } from '../post.service';
+import { TagService } from '../tag.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,29 +13,90 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  public successMessage = {msg:"",showSuccess:false};
+  public imgURL: string = "https://i.pravatar.cc/40?img=";
+  constructor(public tagService: TagService,
+              public postService: PostService,
+              private modalService: NgbModal,
+              public userService: UserService,
+              public userDetailsService:UserDetailsService) { }
   public profileModal = { firstName: "", lastName: "", password: "" };
-  closeResult = '';
-  public email: string = "";
-  public user ?: User;
+  public completedProfile: boolean = false;
+  public updateProfileModal ={
+    age: this.userDetails?.age,
+    phoneNumber: this.userDetails?.linkedinProfileLink,
+    githubProfileLink:this.userDetails?.githubProfileLink,
+    linkedinProfileLink:this.userDetails?.linkedinProfileLink};
+  public completeProfileModal = {
+    age: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    address: "",
+    githubProfileLink:"",
+    linkedinProfileLink:"",
+    gender:"MALE"};
+  public closeResult = '';
+  public userDetails? : UserDetails;
+  public user?: User;
+  public idUser?: number;
+  public myPosts?: number;
+  public myTags?:number;
   ngOnInit(): void {
-    this.userService.current().subscribe(data => {
-      this.email = data.message;
-    })
-    this.userService.getUsers().subscribe(data => {
-      this.user = data.filter(el => el.email === this.email)[0];
+    this.userService.activeUser().subscribe(data => {
+      this.user = data;
       this.profileModal = {
         firstName: this.user?.firstName,
         lastName: this.user?.lastName,
-        password:""
+        password: ""
       }
+    this.idUser = this.user.id;
+    this.userDetailsService.getUserDetails().subscribe(data => {
+    this.userDetails = data.filter(el => el.user?.id == this.idUser)[0];
+    this.updateProfileModal ={
+    age: this.userDetails?.age,
+    phoneNumber: this.userDetails?.phoneNumber,
+    githubProfileLink:this.userDetails?.githubProfileLink,
+    linkedinProfileLink: this.userDetails?.linkedinProfileLink
+    };
     })
+    this.tagService.getTags().subscribe(data => {
+    this.myTags = data.filter(el => +el.user_id == this.idUser).length;
+    })
+    this.postService.getPosts().subscribe(data => {
+    this.myPosts = data.filter(el => el.user.id == this.idUser).length;
+    })
+    });
+  }
+  onSubmitComplete() {
+    this.userDetailsService.userDetailsProfile(this.completeProfileModal).subscribe(data => {
+      this.userDetailsService.affectUserToDetails(this.user!.id, data.id).subscribe(data => {
+        this.userDetails = data.userDetails;
+        this.updateProfileModal ={
+        age: this.userDetails?.age,
+        phoneNumber: this.userDetails?.phoneNumber,
+        githubProfileLink:this.userDetails?.githubProfileLink,
+        linkedinProfileLink: this.userDetails?.linkedinProfileLink
+        };
+        this.successMessage = { msg :"User details successfully added!", showSuccess: true }
+        setTimeout(() => this.successMessage={ msg:"", showSuccess: false }, 3000)
+      });
+    });
   }
   onSubmitUpdate() {
     this.userService.updateUser(this.profileModal, this.user!.id).subscribe(data => {
       this.user = data.user;
+      this.successMessage = { msg :"User profile successfully updated!", showSuccess: true }
+      setTimeout(() => this.successMessage={ msg:"", showSuccess: false }, 3000)
     })
   }
-  constructor(private modalService: NgbModal,public userService : UserService) {}
+  onSubmitUpdateDetails() {
+    this.userDetailsService.updateUserDetails(this.userDetails!.id, this.updateProfileModal).subscribe(data => {
+      this.userDetails = data.userDetails;
+      this.successMessage = { msg :"User details successfully updated!", showSuccess: true }
+      setTimeout(() => this.successMessage={ msg:"", showSuccess: false }, 3000)
+    })
+  }
+
   open(content:any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;

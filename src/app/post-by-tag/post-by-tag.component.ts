@@ -28,7 +28,9 @@ export class PostByTagComponent implements OnInit {
       this.param = {
       id: this.route.snapshot.params["id"],
       }
-     this.tagService.getTagsById(this.param.id).subscribe(data=>this.posts=data.posts)
+    this.tagService.getTagsById(this.param.id).subscribe(data => {
+      this.posts = data.posts;
+    })
    // this.userService.getRoles().subscribe(data=>console.log(data))
     // this.userService.getPositions()
   }
@@ -37,7 +39,7 @@ export class PostByTagComponent implements OnInit {
     var result = new Date(createdAt).getTime();
     let now = new Date().getTime()
     let difference = now - result;
-  var minutes = Math.floor((difference / (1000 * 60)) % 60),
+    var minutes = Math.floor((difference / (1000 * 60)) % 60),
     hours = Math.floor((difference / (1000 * 60 * 60)) % 24),
     days = Math.floor((difference / (1000 * 60 * 60 * 24)) % 30),
     months = Math.floor((difference / (1000 * 60 * 60 * 24 * 30)) % 12),
