@@ -9,32 +9,6 @@
                     <div class="col-md-8 col-10">
                         <h1>Sign Up</h1>
                              <label id="example-radio-group-label">Pick your role:</label>
-                             <mat-radio-group
-                                aria-labelledby="example-radio-group-label"
-                                [(ngModel)]="role"
-                                >
-                             <mat-radio-button
-                             value="user"
-                                checked
-                                 >
-                                USER
-                             </mat-radio-button>
-                             <mat-radio-button
-                             value="guest"
-                                 >
-                                GUEST
-                             </mat-radio-button>
-                             <mat-radio-button
-                             value="admin"
-                                 >
-                                ADMIN
-                             </mat-radio-button>
-                             <mat-radio-button
-                             value="super-admin"
-                                 >
-                                SUPER_ADMIN
-                             </mat-radio-button>
-                             </mat-radio-group>
                         <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
                           <div class="form-group">
                            <label class="form-control-label text-muted">First name</label>

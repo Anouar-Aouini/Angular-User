@@ -12,7 +12,7 @@ import { UserService } from '../user.service';
 export class RegisterComponent implements OnInit {
   constructor(private fb: FormBuilder,public router:Router,public userService : UserService) { }
   public registerForm!: FormGroup;
-  public role: string = "guest";
+  public role: string = "user";
   public errorMessage = { msg: "", show: false };
   public successMessage = {msg:"",showSuccess:false};
   ngOnInit(): void {
@@ -45,6 +45,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmitRegister() {
+    console.log(this.role);
   let user =  {
   email: this.registerForm.value.email,
   firstName: this.registerForm.value.firstName,

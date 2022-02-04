@@ -15,7 +15,8 @@
       </a>
     </li>
     <li>
-      <a routerLink="/auth/list" routerLinkActive="active">
+      <a
+      *ngIf="user?.roles[0].name=='ADMIN'"  routerLink="/auth/list" routerLinkActive="active">
         <i class="fa fa-users" aria-hidden="true"></i> User List
       </a>
     </li>
@@ -25,13 +26,13 @@
       </a>
     </li> -->
     <li>
-      <a [routerLink]="['/auth/posts']" routerLinkActive="active">
-        <i class="fa fa-info-circle"  aria-hidden="true"></i> Posts
+      <a [routerLink]="['/auth/books']" routerLinkActive="active">
+        <i class="fa fa-info-circle"  aria-hidden="true"></i> Books
       </a>
     </li>
         <li>
-      <a [routerLink]="['/auth/tags']" routerLinkActive="active">
-        <i class="fa fa-home"  aria-hidden="true"></i> Tags
+      <a *ngIf="user?.roles[0].name=='ADMIN'" [routerLink]="['/auth/categories']" routerLinkActive="active">
+        <i class="fa fa-home"  aria-hidden="true"></i> Categories
       </a>
     </li>
         <li>

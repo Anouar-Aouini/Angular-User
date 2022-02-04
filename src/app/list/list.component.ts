@@ -26,10 +26,4 @@ export class ListComponent implements OnInit ,OnChanges{
     }
   }
 
-  deleteUser(id: number) {
-    this.userService.deleteUser(id);
-    this.userService.getUsers().subscribe(data => {
-      this.users = data;
-    })
-  }
 }
